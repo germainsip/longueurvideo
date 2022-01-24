@@ -2,10 +2,13 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const ffmpeg = require("fluent-ffmpeg");
 
+
+let win
+
 // fonction de création de fenêtres
 // n'oubliez pas l'import de BrowserWindow
 function createWindow() {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     webPreferences: {
       // charge le fichier preload.js en utillisant l'api path
       preload: path.join(__dirname, "preload.js"),
@@ -24,7 +27,7 @@ app.on("ready", () => {
 ipcMain.on("video:submit", (event, path) => {
    // utilisation de fluent-ffmpeg
   ffmpeg.ffprobe(path, (err, metadata) => {
-     // affichons la durée dans la console
-    console.log("La durée du film est de ", metadata.format.duration, ' secondes');
+     // on envoie la durée à la vue
+     win.webContents.send('video:metadata',metadata.format.duration);
   });
 });
