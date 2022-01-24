@@ -1,11 +1,16 @@
-const { ipcRender } = require("electron");
+const { ipcRenderer } = require("electron");
 
 
 window.addEventListener('DOMContentLoaded', () => {
     document.querySelector("form").addEventListener("submit", (event) => {
         event.preventDefault();
-        const file = document.querySelector("input").files[0];
-        console.log(file);
+        //const file = document.querySelector("input").files[0];
+        //console.log(file);
+
+        const {path}  = document.querySelector("input").files[0];
+        console.log(path)
+
+        ipcRenderer.send('video:submit', path)
       });
       
 })
